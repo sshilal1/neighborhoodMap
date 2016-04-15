@@ -1,19 +1,38 @@
 var googleAPIkey = 'AIzaSyBdPs-DH6pWE-_DYa6jKEGBYtgcWvDW6-Q';
-var cityLatLng = '61.2181 N, 149.9003 W';
+var cityLatLng = {lat: 61.1981, lng: -149.90};
+
+function initMap() {
+	var map = new google.maps.Map(document.getElementById('map'), {
+		center: cityLatLng,
+		zoom: 13
+	});
+
+	var marker = new google.maps.Marker( {
+		position: cityLatLng,
+		map: map,
+		title: 'Anchorage'
+	});
+};
 
 var Model = function() {
 
+	
 };
 
 var ViewModel = function() {
 
+/*
+	var self = this;
+
+	this.pointsOfInterest = ko.observableArray([]);
+
+	locations.forEach(function(locInfo) {
+		self.pointsOfInterest.push(new poi(locInfo));
+	});
+*/
 };
 
-var map;
-function initMap() {
-	map = new google.maps.Map(document.getElementById('map'), {
-		center: {lat: 61.1981, lng: -149.90},
-		zoom: 13
-	});
-};
+
+
+
 //ko.applyBindings(new ViewModel());
