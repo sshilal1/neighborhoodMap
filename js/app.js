@@ -1,4 +1,5 @@
 var googleAPIkey = 'AIzaSyBdPs-DH6pWE-_DYa6jKEGBYtgcWvDW6-Q';
+var yelpKey = 'R9P1G_amYFdC5Uo14SeMHw';
 var cityLatLng = {lat: 61.1981, lng: -149.90};
 
 function initMap() {
@@ -12,12 +13,17 @@ function initMap() {
 		map: map,
 		title: 'Anchorage'
 	});
+}
+
+var Poi = function(data) {
+	this.city = ko.observable(data.city);
+	this.state = ko.observable(data.state);
+	this.street = ko.observable(data.street);
+	this.num = ko.observable(data.num);
+	this.title = ko.observable(data.title);
 };
 
-var Model = function() {
-
-	
-};
+//https://api.yelp.com/v2/search/?term=food&location=San%20Francisco,%20CA&limit=10&category_filter=pizza
 
 var ViewModel = function() {
 
@@ -27,7 +33,7 @@ var ViewModel = function() {
 	this.pointsOfInterest = ko.observableArray([]);
 
 	locations.forEach(function(locInfo) {
-		self.pointsOfInterest.push(new poi(locInfo));
+		self.pointsOfInterest.push(new Poi(locInfo));
 	});
 */
 };

@@ -8,9 +8,11 @@
   </head>
 
   <body>
-  	<ul data-bind="foreach: poiList">
-  		<li data-bind="text: title, click: $parent.setPoi"></li>
-  	</ul>
+    <div id="searchMenu">
+    	<ul data-bind="foreach: poiList">
+    		<li data-bind="text: title, click: $parent.setPoi"></li>
+    	</ul>
+    </div>
 
     <div id="map"></div>
     <script src="js/app.js"></script>

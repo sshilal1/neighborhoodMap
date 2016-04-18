@@ -4,6 +4,19 @@ html, body {
 	padding: 0;
 }
 
+#searchMenu {
+	position: absolute;
+	top: 7%;
+	left: 7%;
+	height: 80%;
+	width: 40%;
+	background-color: green;
+	z-index: 1;
+	opacity: .5;
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
 #map {
 	height: 100%;
+	z-index: -1;
 }
