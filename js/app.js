@@ -5,6 +5,13 @@ var pointsOfInterest = [
 		poiLng: -149.785815,
 		address: '4731 O' + "'"+ 'Malley Rd, Anchorage, AK 99507',
 		imgSrc: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Alaska_Zoo,_Anchorage.jpg/250px-Alaska_Zoo,_Anchorage.jpg'
+	},
+	{
+		title: 'Tony Knowles Coastal Bicycle Trail',
+		poiLat: 61.201475,
+		poiLng: -149.954129,
+		address: '810 W 2nd Ave, Anchorage, AK 99501',
+		imgSrc: 'hh'
 	}
 ]
 
@@ -18,22 +25,14 @@ function initMap() {
 		zoom: 11
 	});
 
-	var marker = new google.maps.Marker( {
+	//makeMarkers(map);
+	/*var marker = new google.maps.Marker( {
 		position: cityLatLng,
 		map: map,
 		title: 'Anchorage'
-	});
+	});*/
 }
-/*
-function makeMarker(locationInfo) {
-	var latLongPos =  {lat: locationInfo.poiLat, lng: locationInfo.lng};
-	locationInfo[0].holdMarker = new google.maps.Marker( {
-		position: latLongPos,
-		map: map,
-		title: locationInfo.title
-	}); 
-}
-*/
+
 var Poi = function(data) {
 	this.title = ko.observable(data.title);
 }
@@ -56,3 +55,12 @@ var ViewModel = function() {
 }
 
 ko.applyBindings(new ViewModel());
+
+function makeMarker(locationInfo) {
+	var latLongPos =  {lat: locationInfo.poiLat, lng: locationInfo.lng};
+	locationInfo[0].holdMarker = new google.maps.Marker( {
+		position: latLongPos,
+		map: map,
+		title: locationInfo.title
+	}); 
+}
