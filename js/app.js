@@ -1,17 +1,44 @@
+function startUp() {
+	var mapScript = document.createElement('script');
+	mapScript.type = 'text/javascript';
+	mapScript.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyBdPs-DH6pWE-_DYa6jKEGBYtgcWvDW6-Q&callback=initMap';
+	document.body.appendChild(mapScript);
+}
+
+window.onload = startUp;
+
 var pointsOfInterest = [
 	{
 		title: 'Alaska Zoo',
 		poiLat: 61.123739,
 		poiLng: -149.785815,
-		address: '4731 O' + "'"+ 'Malley Rd, Anchorage, AK 99507',
+		streetAddr: '4731 OMalley Rd',
+		cityAddr: 'Anchorage, AK 99507',
 		imgSrc: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Alaska_Zoo,_Anchorage.jpg/250px-Alaska_Zoo,_Anchorage.jpg'
 	},
 	{
 		title: 'Tony Knowles Coastal Bicycle Trail',
 		poiLat: 61.201475,
 		poiLng: -149.954129,
-		address: '810 W 2nd Ave, Anchorage, AK 99501',
-		imgSrc: 'hh'
+		streetAddr: '810 W 2nd Ave',
+		cityAddr: 'Anchorage, AK 99501',
+		imgSrc: 'https://upload.wikimedia.org/wikipedia/commons/e/e3/Tony_Knowles_Coastal_Trail.jpg'
+	},
+	{
+		title: 'Alaska Railroad Depot',
+		poiLat: 61.221696,
+		poiLng: -149.89019,
+		streetAddr: '411 W. 1st Ave',
+		cityAddr: 'Anchorage, AK 99501',
+		imgSrc: 'https://c2.staticflickr.com/4/3294/2850221419_32d4858871.jpg'
+	},
+	{
+		title: 'Anchorage Museam at Rasmuson Center',
+		poiLat: 61.216093,
+		poiLng: -149.884613,
+		streetAddr: '625 C Street',
+		cityAddr: 'Anchorage, AK 99501',
+		imgSrc: 'https://affiliations.si.edu/media_images/data/Anchorage%20Museum.jpg'
 	}
 ]
 
@@ -20,17 +47,23 @@ var yelpKey = 'R9P1G_amYFdC5Uo14SeMHw';
 var cityLatLng = {lat: 61.1881, lng: -149.90};
 
 function initMap() {
-	var map = new google.maps.Map(document.getElementById('map'), {
+	map = new google.maps.Map(document.getElementById('map'), {
 		center: cityLatLng,
 		zoom: 11
 	});
+	makeMarkers();
+}
 
-	//makeMarkers(map);
-	/*var marker = new google.maps.Marker( {
-		position: cityLatLng,
-		map: map,
-		title: 'Anchorage'
-	});*/
+function makeMarkers() {
+	
+	for (i=0; i< pointsOfInterest.length; i++) {
+		var latLongPos =  {lat: pointsOfInterest[i].poiLat, lng: pointsOfInterest[i].poiLng};
+		var marker = new google.maps.Marker( {
+			position: latLongPos,
+			map: map,
+			title: pointsOfInterest[i].title
+		}); 
+	}
 }
 
 var Poi = function(data) {
@@ -47,20 +80,7 @@ var ViewModel = function() {
 
 	pointsOfInterest.forEach(function(locInfo) {
 		self.poiList.push(new Poi(locInfo));
-		//makeMarker(locInfo);
 	});
-
-	//makeMarkers();
-
 }
 
 ko.applyBindings(new ViewModel());
-
-function makeMarker(locationInfo) {
-	var latLongPos =  {lat: locationInfo.poiLat, lng: locationInfo.lng};
-	locationInfo[0].holdMarker = new google.maps.Marker( {
-		position: latLongPos,
-		map: map,
-		title: locationInfo.title
-	}); 
-}
