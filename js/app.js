@@ -1,11 +1,21 @@
+var pointsOfInterest = [
+	{
+		title: 'Alaska Zoo',
+		poiLat: 61.123739,
+		poiLng: -149.785815,
+		address: '4731 O' + "'"+ 'Malley Rd, Anchorage, AK 99507',
+		imgSrc: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Alaska_Zoo,_Anchorage.jpg/250px-Alaska_Zoo,_Anchorage.jpg'
+	}
+]
+
 var googleAPIkey = 'AIzaSyBdPs-DH6pWE-_DYa6jKEGBYtgcWvDW6-Q';
 var yelpKey = 'R9P1G_amYFdC5Uo14SeMHw';
-var cityLatLng = {lat: 61.1981, lng: -149.90};
+var cityLatLng = {lat: 61.1881, lng: -149.90};
 
 function initMap() {
 	var map = new google.maps.Map(document.getElementById('map'), {
 		center: cityLatLng,
-		zoom: 13
+		zoom: 11
 	});
 
 	var marker = new google.maps.Marker( {
@@ -14,31 +24,35 @@ function initMap() {
 		title: 'Anchorage'
 	});
 }
-
+/*
+function makeMarker(locationInfo) {
+	var latLongPos =  {lat: locationInfo.poiLat, lng: locationInfo.lng};
+	locationInfo[0].holdMarker = new google.maps.Marker( {
+		position: latLongPos,
+		map: map,
+		title: locationInfo.title
+	}); 
+}
+*/
 var Poi = function(data) {
-	this.city = ko.observable(data.city);
-	this.state = ko.observable(data.state);
-	this.street = ko.observable(data.street);
-	this.num = ko.observable(data.num);
 	this.title = ko.observable(data.title);
-};
+}
 
 //https://api.yelp.com/v2/search/?term=food&location=San%20Francisco,%20CA&limit=10&category_filter=pizza
 
 var ViewModel = function() {
 
-/*
 	var self = this;
 
-	this.pointsOfInterest = ko.observableArray([]);
+	this.poiList = ko.observableArray([]);
 
-	locations.forEach(function(locInfo) {
-		self.pointsOfInterest.push(new Poi(locInfo));
+	pointsOfInterest.forEach(function(locInfo) {
+		self.poiList.push(new Poi(locInfo));
+		//makeMarker(locInfo);
 	});
-*/
-};
 
+	//makeMarkers();
 
+}
 
-
-//ko.applyBindings(new ViewModel());
+ko.applyBindings(new ViewModel());

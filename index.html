@@ -10,14 +10,16 @@
   <body>
     <div id="searchMenu">
     	<ul data-bind="foreach: poiList">
-    		<li data-bind="text: title, click: $parent.setPoi"></li>
+    		<li data-bind="text: title"></li>
     	</ul>
     </div>
 
     <div id="map"></div>
-    <script src="js/app.js"></script>
+    
+    <script src="js/lib/knockout-3.4.0.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBdPs-DH6pWE-_DYa6jKEGBYtgcWvDW6-Q&callback=initMap"
     async defer></script>
+    <script src="js/app.js"></script>s
   </body>
 
 </html>
