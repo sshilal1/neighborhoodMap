@@ -51,18 +51,45 @@ function initMap() {
 		center: cityLatLng,
 		zoom: 11
 	});
+
+	infowindow = new google.maps.InfoWindow();
+
 	makeMarkers();
 }
 
 function makeMarkers() {
 	
 	for (i=0; i< pointsOfInterest.length; i++) {
+
 		var latLongPos =  {lat: pointsOfInterest[i].poiLat, lng: pointsOfInterest[i].poiLng};
+
+		var infoContent = '<div class="infoContentBlock">' +
+			'<div class="iWTitle">' + pointsOfInterest[i].title +
+			//'</div><div class=iWBlurp>' + pointsOfInterest[i].blurp +
+			'</div><img src="' + pointsOfInterest[i].imgSrc +
+			'"</img></div>';
+
 		var marker = new google.maps.Marker( {
 			position: latLongPos,
 			map: map,
 			title: pointsOfInterest[i].title
-		}); 
+		});
+
+		google.maps.event.addListener(marker, 'click', (function (marker) {
+			return function () {
+				infowindow.setContent(infoContent);
+				infowindow.open(map, marker);
+			}
+		})(marker));
+/*
+		marker.infowindow = new google.maps.InfoWindow({
+    		content: infoContent
+		});
+
+		google.maps.event.addListener(marker,'click', function(marker) {
+			marker.infowindow.open(map, marker);
+		});
+*/
 	}
 }
 
