@@ -11,7 +11,7 @@ var pointsOfInterest = [
 	{
 		title: 'Alaska Zoo',
 		poiLat: 61.123739,
-		poiLng: -149.785815,
+		poiLng: -149.791815,
 		streetAddr: '4731 OMalley Rd',
 		cityAddr: 'Anchorage, AK 99507',
 		imgSrc: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Alaska_Zoo,_Anchorage.jpg/250px-Alaska_Zoo,_Anchorage.jpg'
@@ -72,9 +72,9 @@ function makeMarkers() {
 		var latLongPos =  {lat: pointsOfInterest[i].poiLat, lng: pointsOfInterest[i].poiLng};
 
 		var infoContent = '<div class="infoContentBlock">' +
-			'<div class="iWTitle">' + pointsOfInterest[i].title +
+			'<h2>' + pointsOfInterest[i].title +
 			//'</div><div class=iWBlurp>' + pointsOfInterest[i].blurp +
-			'</div><img src="' + pointsOfInterest[i].imgSrc +
+			'</h2><img src="' + pointsOfInterest[i].imgSrc +
 			'"</img></div>';
 
 		var marker = new google.maps.Marker( {
@@ -108,10 +108,21 @@ function bindInfoWindow(marker, map, infowindow, html) {
         infowindow.setContent(html);
         infowindow.open(map, this);
     });
-} 
+}
+
+function setMapToPoi(newLat,newLng) {
+	map.setCenter( {
+		lat : newLat,
+		lng : newLng
+	});
+	map.setZoom(17);
+}
 
 var Poi = function(data) {
 	this.title = ko.observable(data.title);
+	this.streetAddr = ko.observable(data.streetAddr);
+	this.poiLat = data.poiLat;
+	this.poiLng = data.poiLng;
 }
 
 //https://api.yelp.com/v2/search/?term=food&location=San%20Francisco,%20CA&limit=10&category_filter=pizza
@@ -125,6 +136,10 @@ var ViewModel = function() {
 	pointsOfInterest.forEach(function(locInfo) {
 		self.poiList.push(new Poi(locInfo));
 	});
+
+	this.setPoi = function(clickedPoi) {
+		setMapToPoi(clickedPoi.poiLat,clickedPoi.poiLng);
+	}
 }
 
 ko.applyBindings(new ViewModel());
