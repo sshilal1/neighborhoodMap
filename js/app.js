@@ -75,13 +75,15 @@ function makeMarkers() {
 			title: pointsOfInterest[i].title
 		});
 
+		bindInfoWindow(marker, map, infowindow, infoContent);
+/*
 		google.maps.event.addListener(marker, 'click', (function (marker) {
 			return function () {
 				infowindow.setContent(infoContent);
 				infowindow.open(map, marker);
 			}
 		})(marker));
-/*
+
 		marker.infowindow = new google.maps.InfoWindow({
     		content: infoContent
 		});
@@ -92,6 +94,13 @@ function makeMarkers() {
 */
 	}
 }
+
+function bindInfoWindow(marker, map, infowindow, html) {
+    marker.addListener('click', function() {
+        infowindow.setContent(html);
+        infowindow.open(map, this);
+    });
+} 
 
 var Poi = function(data) {
 	this.title = ko.observable(data.title);
