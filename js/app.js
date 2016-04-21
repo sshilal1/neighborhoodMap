@@ -39,6 +39,14 @@ var pointsOfInterest = [
 		streetAddr: '625 C Street',
 		cityAddr: 'Anchorage, AK 99501',
 		imgSrc: 'https://affiliations.si.edu/media_images/data/Anchorage%20Museum.jpg'
+	},
+	{
+		title: 'Alaska Native Heritage Center',
+		poiLat: 61.232818,
+		poiLng: -149.717059,
+		streetAddr: '8800 Heritage Center Dr',
+		cityAddr: 'Anchorage, AK 99501',
+		imgSrc: 'http://www.alaska.org/photos/gallery3/var/albums/anchorage-photos/anchorage-attractions/Alaska-Native-Heritage-Center/Alaska-Native-Heritage-Center-03-347796285.jpg?m=1385595257'
 	}
 ]
 
