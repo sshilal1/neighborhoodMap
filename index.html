@@ -10,11 +10,11 @@
   <body>
     <div id="searchMenu">
       <div id="searchBar">Search: </div>
-    	<ul data-bind="foreach: poiList">
+    	<ul id="searchResults" data-bind="foreach: poiList">
     		<li class="searchElem" data-bind="click: $parent.setPoi">
-          <div style="font-size:14px;" data-bind="text: title"></div>
-          <div style="font-size:12px;" data-bind="text: streetAddr"></div>
-        </li>
+			  <div style="font-size:18px; font-weight:bold;" data-bind="text: title"></div>
+			  <p style="font-size:14px;" data-bind="text: streetAddr"></p>
+			</li>
     	</ul>
     </div>
 

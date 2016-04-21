@@ -4,19 +4,34 @@ html, body {
 	padding: 0;
 }
 
+li:hover {
+    background-color: #7D7D7D;
+    color: white;
+	cursor: pointer;
+}
+
 #searchMenu {
 	position: absolute;
 	top: 7%;
 	left: 7%;
 	max-width: 600px;
-	max-height: 250px;
+	height: 60%;
 	background-color: green;
 	z-index: 1;
-	opacity: .5;
-	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+	opacity: .7;
+}
+
+#searchBar {
+
+}
+
+#searchResults {
+	max-height: 300px;
+	overflow: scroll;
 }
 
 .searchElem {
+	padding: 3%;
 	border-style: solid;
 	border-width: 1px;
 	border-color: black;
