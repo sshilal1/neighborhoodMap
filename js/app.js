@@ -147,6 +147,7 @@ var Poi = function(data) {
 	this.index = data.entryNum;
 }
 
+// http://jsfiddle.net/Lvuvh2pc/33/
 // The viewModel to be instantiated with knockout
 var ViewModel = function() {
 
@@ -161,6 +162,9 @@ var ViewModel = function() {
 	this.setPoi = function(clickedPoi) {
 		setMapToPoi(clickedPoi);
 	}
+	
+	this.searchFor = ko.observable('');
+	
 }
 
 ko.applyBindings(new ViewModel());
