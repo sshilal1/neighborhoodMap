@@ -11,7 +11,7 @@
     <div id="searchMenu">
 	<div style="font-size:14px;padding:2%">Search</div>
       <input data-bind="textInput: searchFor"></input>
-	  <div data-bind="text: searchFor"></div>
+	  <button data-bind="click: resetMapZoom">Reset Zoom</button>
     	<ul id="searchResults" data-bind="foreach: masterList">
     		<li class="searchElem" data-bind="click: $parent.setPoi">
 			  <div style="font-size:18px; font-weight:bold;" data-bind="text: title"></div>

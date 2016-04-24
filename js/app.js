@@ -138,6 +138,11 @@ function setMapToPoi(poi) {
 	google.maps.event.trigger(pointsOfInterest[poi.index].gMarker, 'click');
 }
 
+function resetMapZoom() {
+	map.setCenter(cityLatLng);
+	map.setZoom(11);
+}
+
 // A POI object created from the array pointsOfInterest
 var Poi = function(data) {
 	this.title = ko.observable(data.title);
@@ -145,6 +150,7 @@ var Poi = function(data) {
 	this.poiLat = data.poiLat;
 	this.poiLng = data.poiLng;
 	this.index = data.entryNum;
+	this.marker = ko.observable(data.gMarker);
 }
 
 // http://jsfiddle.net/Lvuvh2pc/33/
@@ -163,8 +169,13 @@ var ViewModel = function() {
 		setMapToPoi(clickedPoi);
 	}
 	
+	this.poiList.sort(function (left,right) {
+		return left.title() == right.title() ? 0 : (left.title() < right.title() ? -1 : 1)
+	});
+
 	this.searchFor = ko.observable('');
 
+	// The final list of elements displayed, filtered by the search
 	this.masterList = ko.computed(function() {
 		var searchText = this.searchFor().toLowerCase();
 		if (!searchText) {
