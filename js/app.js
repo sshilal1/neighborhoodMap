@@ -164,6 +164,18 @@ var ViewModel = function() {
 	}
 	
 	this.searchFor = ko.observable('');
+
+	this.masterList = ko.computed(function() {
+		var searchText = this.searchFor().toLowerCase();
+		if (!searchText) {
+			return this.poiList();
+		}
+		else {
+			return ko.utils.arrayFilter(this.poiList(), function(Poi) {
+				return Poi.title().toLowerCase().indexOf(searchText) !== -1;
+			});
+		}
+	}, this);
 	
 }
 
