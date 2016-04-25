@@ -29,7 +29,7 @@ var pointsOfInterest = [
 		cityAddr: 'Anchorage, AK 99507',
 		imgSrc: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Alaska_Zoo,_Anchorage.jpg/250px-Alaska_Zoo,_Anchorage.jpg',
 		entryNum: 0,
-		gMarker: {}
+		gMarker: ko.observable(true)
 	},
 	{
 		title: 'Tony Knowles Coastal Bicycle Trail',
@@ -39,7 +39,7 @@ var pointsOfInterest = [
 		cityAddr: 'Anchorage, AK 99501',
 		imgSrc: 'https://upload.wikimedia.org/wikipedia/commons/e/e3/Tony_Knowles_Coastal_Trail.jpg',
 		entryNum: 1,
-		gMarker: {}
+		gMarker: ko.observable(true)
 	},
 	{
 		title: 'Alaska Railroad Depot',
@@ -49,7 +49,7 @@ var pointsOfInterest = [
 		cityAddr: 'Anchorage, AK 99501',
 		imgSrc: 'https://c2.staticflickr.com/4/3294/2850221419_32d4858871.jpg',
 		entryNum: 2,
-		gMarker: {}
+		gMarker: ko.observable(true)
 	},
 	{
 		title: 'Anchorage Museam at Rasmuson Center',
@@ -59,7 +59,7 @@ var pointsOfInterest = [
 		cityAddr: 'Anchorage, AK 99501',
 		imgSrc: 'https://affiliations.si.edu/media_images/data/Anchorage%20Museum.jpg',
 		entryNum: 3,
-		gMarker: {}
+		gMarker: ko.observable(true)
 	},
 	{
 		title: 'Alaska Native Heritage Center',
@@ -69,7 +69,7 @@ var pointsOfInterest = [
 		cityAddr: 'Anchorage, AK 99501',
 		imgSrc: 'http://www.alaska.org/photos/gallery3/var/albums/anchorage-photos/anchorage-attractions/Alaska-Native-Heritage-Center/Alaska-Native-Heritage-Center-03-347796285.jpg?m=1385595257',
 		entryNum: 4,
-		gMarker: {}
+		gMarker: ko.observable(true)
 	}
 ]
 
@@ -143,6 +143,12 @@ function resetMapZoom() {
 	map.setZoom(11);
 }
 
+function removeMarkers(poi) {
+	for (i = 0; i < pointsOfInterest.length; i++) {
+		pointsOfInterest[i].gMarker.setVisible(false);
+	}
+}
+
 // A POI object created from the array pointsOfInterest
 var Poi = function(data) {
 	this.title = ko.observable(data.title);
@@ -150,7 +156,7 @@ var Poi = function(data) {
 	this.poiLat = data.poiLat;
 	this.poiLng = data.poiLng;
 	this.index = data.entryNum;
-	this.marker = ko.observable(data.gMarker);
+	//this.marker = ko.observable(data.gMarker);
 }
 
 // http://jsfiddle.net/Lvuvh2pc/33/
@@ -187,7 +193,6 @@ var ViewModel = function() {
 			});
 		}
 	}, this);
-	
 }
 
 ko.applyBindings(new ViewModel());
