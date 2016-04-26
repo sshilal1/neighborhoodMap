@@ -143,10 +143,24 @@ function resetMapZoom() {
 	map.setZoom(11);
 }
 
-function removeMarkers(poi) {
+function removeMarkers() {
 	for (i = 0; i < pointsOfInterest.length; i++) {
 		pointsOfInterest[i].gMarker.setVisible(false);
 	}
+}
+
+function addMarkers() {
+	for (i = 0; i < pointsOfInterest.length; i++) {
+		pointsOfInterest[i].gMarker.setVisible(true);
+	}
+}
+
+function removeMarker(poiIndex) {
+	pointsOfInterest[poiIndex].gMarker.setVisible(false);
+}
+
+function addMarker(poiIndex) {
+	pointsOfInterest[poiIndex].gMarker.setVisible(true);
 }
 
 // A POI object created from the array pointsOfInterest
@@ -185,11 +199,18 @@ var ViewModel = function() {
 	this.masterList = ko.computed(function() {
 		var searchText = this.searchFor().toLowerCase();
 		if (!searchText) {
+			addMarkers();
 			return this.poiList();
 		}
 		else {
 			return ko.utils.arrayFilter(this.poiList(), function(Poi) {
-				return Poi.title().toLowerCase().indexOf(searchText) !== -1;
+				if (Poi.title().toLowerCase().indexOf(searchText) == -1) {
+					removeMarker(Poi.index);
+				}
+				else {
+					addMarker(Poi.index);
+				}
+				return (Poi.title().toLowerCase().indexOf(searchText) !== -1);
 			});
 		}
 	}, this);
