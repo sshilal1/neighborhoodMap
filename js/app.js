@@ -72,12 +72,12 @@ var pointsOfInterest = [
 		gMarker: ko.observable(true)
 	},
 	{
-		title: 'Alaska Center for the Permorming Arts',
+		title: 'Alaska Center for the Performing Arts',
 		poiLat: 61.2172,
 		poiLng: -149.8956,
 		streetAddr: '621 W 6th Ave',
 		cityAddr: 'Anchorage, AK 99501',
-		imgSrc: 'http://www.alaska.org/photos/gallery3/var/albums/anchorage-photos/anchorage-attractions/Alaska-Native-Heritage-Center/Alaska-Native-Heritage-Center-03-347796285.jpg?m=1385595257',
+		imgSrc: 'http://events-media.nationalgeographic.com/media/images/photos/AlaskaCenter2-dl_jpg_610x343_crop_upscale_q85.jpg',
 		entryNum: 5,
 		gMarker: ko.observable(true)
 	}
@@ -87,6 +87,9 @@ var hoveredIcon = 'http://mt.google.com/vt/icon?psize=25&font=fonts/Roboto-Bold.
 var standardIcon = 'http://mt.googleapis.com/vt/icon/name=icons/spotlight/spotlight-poi.png&scale=1'
 var googleAPIkey = 'AIzaSyBdPs-DH6pWE-_DYa6jKEGBYtgcWvDW6-Q';
 var yelpKey = 'R9P1G_amYFdC5Uo14SeMHw';
+var curTime = Date.now();
+curTime = 1461700022189;
+var yelpURL = 'https://api.yelp.com/v2/search?term=Food&location=Anchorage, AK&sort=1&limit=10&oauth_consumer_key=R9P1G_amYFdC5Uo14SeMHw&oauth_token=CZzMTRD-t9h-PccH-2rVUCeaa-SetctZ&oauth_signature_method=HMAC-SHA1&oauth_signature=yL7XOcZhr_148DFeoCVkRrIl6gA&oauth_timestamp=1461700022189&oauth_nonce=u2q3OMmc0CE';
 var cityLatLng = {lat: 61.1881, lng: -149.90};
 
 // Creates the map. called in the Startup function
