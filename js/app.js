@@ -150,8 +150,10 @@ function removeMarkers() {
 }
 
 function addMarkers() {
-	for (i = 0; i < pointsOfInterest.length; i++) {
-		pointsOfInterest[i].gMarker.setVisible(true);
+	if (pointsOfInterest[0].gMarker != null) {
+		for (i = 0; i < pointsOfInterest.length; i++) {
+			pointsOfInterest[i].gMarker.setVisible(true);
+		}
 	}
 }
 
@@ -170,7 +172,7 @@ var Poi = function(data) {
 	this.poiLat = data.poiLat;
 	this.poiLng = data.poiLng;
 	this.index = data.entryNum;
-	//this.marker = ko.observable(data.gMarker);
+	this.marker = ko.observable(data.gMarker);
 }
 
 // http://jsfiddle.net/Lvuvh2pc/33/
@@ -178,6 +180,8 @@ var Poi = function(data) {
 var ViewModel = function() {
 
 	var self = this;
+
+	self.initialize = ko.observable(true);
 
 	this.poiList = ko.observableArray([]);
 
@@ -198,19 +202,24 @@ var ViewModel = function() {
 	// The final list of elements displayed, filtered by the search
 	this.masterList = ko.computed(function() {
 		var searchText = this.searchFor().toLowerCase();
+
 		if (!searchText) {
-			addMarkers();
+			if (!self.initialize()) {
+				addMarkers();
+			}
+			self.initialize(false);
 			return this.poiList();
 		}
+
 		else {
 			return ko.utils.arrayFilter(this.poiList(), function(Poi) {
-				if (Poi.title().toLowerCase().indexOf(searchText) == -1) {
-					removeMarker(Poi.index);
+				if (Poi.title().toLowerCase().indexOf(searchText) >= 0) {
+					addMarker(Poi.index);
+					return Poi.index;
 				}
 				else {
-					addMarker(Poi.index);
+					removeMarker(Poi.index);
 				}
-				return (Poi.title().toLowerCase().indexOf(searchText) !== -1);
 			});
 		}
 	}, this);
