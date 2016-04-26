@@ -9,10 +9,7 @@
 
   <body>
     <div id="searchMenu">
-	<div style="font-size:14px;padding:2%">Search</div>
-      <input data-bind="textInput: searchFor"></input>
-	  <button data-bind="click: resetMapZoom">Reset Zoom</button>
-	  <button data-bind="click: removeMarkers">Remove Marks</button>
+      <input id="searchBar" placeholder="Search..." data-bind="textInput: searchFor"></input>
     	<ul id="searchResults" data-bind="foreach: masterList">
     		<li class="searchElem" data-bind=" event: { mouseover: $parent.mouseHovered, mouseout: $parent.mouseGone }, click: $parent.setPoi">
 			  <div style="font-size:18px; font-weight:bold;" data-bind="text: title"></div>

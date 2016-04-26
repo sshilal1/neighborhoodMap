@@ -5,7 +5,7 @@ html, body {
 }
 
 li:hover {
-    background-color: #7D7D7D;
+    background-color: #4A2E2E;
     color: white;
 	cursor: pointer;
 }
@@ -15,28 +15,39 @@ li:hover {
 	top: 7%;
 	left: 2%;
 	max-width: 300px;
-	height: 600px;
+	height: 545px;
 	background-color: green;
 	z-index: 1;
-	opacity: .7;
+	opacity: .9;
+	border-style: solid;
+    border-color: #4A2E2E;
+	-webkit-box-shadow: 2px 2px 5px #004d00;
 }
 
 #searchBar {
-
+	padding: 0;
+	margin: 10px;
+	height: 20px;
+	-webkit-box-shadow: 2px 2px 5px #004d00;
+	font-size:20px;
 }
 
 #searchResults {
 	padding: 0;
+	margin: 0;
 	list-style-type: none;
 	max-height: 500px;
 	overflow: auto;
 }
 
 .searchElem {
-	padding: 3%;
+	margin: 3%;
+	padding: 1%;
+	height:75px;
 	border-style: solid;
 	border-width: 1px;
 	border-color: black;
+	-webkit-box-shadow: 2px 2px 5px #004d00;
 }
 
 #map {
