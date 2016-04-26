@@ -15,7 +15,7 @@ li:hover {
 	top: 7%;
 	left: 2%;
 	max-width: 300px;
-	height: 60%;
+	height: 600px;
 	background-color: green;
 	z-index: 1;
 	opacity: .7;
@@ -26,8 +26,10 @@ li:hover {
 }
 
 #searchResults {
-	max-height: 300px;
-	overflow: scroll;
+	padding: 0;
+	list-style-type: none;
+	max-height: 500px;
+	overflow: auto;
 }
 
 .searchElem {

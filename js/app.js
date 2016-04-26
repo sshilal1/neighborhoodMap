@@ -70,6 +70,16 @@ var pointsOfInterest = [
 		imgSrc: 'http://www.alaska.org/photos/gallery3/var/albums/anchorage-photos/anchorage-attractions/Alaska-Native-Heritage-Center/Alaska-Native-Heritage-Center-03-347796285.jpg?m=1385595257',
 		entryNum: 4,
 		gMarker: ko.observable(true)
+	},
+	{
+		title: 'Alaska Center for the Permorming Arts',
+		poiLat: 61.2172,
+		poiLng: -149.8956,
+		streetAddr: '621 W 6th Ave',
+		cityAddr: 'Anchorage, AK 99501',
+		imgSrc: 'http://www.alaska.org/photos/gallery3/var/albums/anchorage-photos/anchorage-attractions/Alaska-Native-Heritage-Center/Alaska-Native-Heritage-Center-03-347796285.jpg?m=1385595257',
+		entryNum: 5,
+		gMarker: ko.observable(true)
 	}
 ]
 
@@ -85,7 +95,7 @@ function initMap() {
 	// New map centered on Anchorage
 	map = new google.maps.Map(document.getElementById('map'), {
 		center: cityLatLng,
-		zoom: 11
+		zoom: 12
 	});
 
 	// General creation of infoWindow
