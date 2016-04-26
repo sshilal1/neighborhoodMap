@@ -207,6 +207,7 @@ var ViewModel = function() {
 		unHighlightMarker(clickedPoi.index);
 	}
 
+	// Necessary for first application of markers/list items
 	self.initialize = ko.observable(true);
 
 	this.poiList = ko.observableArray([]);
@@ -241,7 +242,7 @@ var ViewModel = function() {
 			return ko.utils.arrayFilter(this.poiList(), function(Poi) {
 				if (Poi.title().toLowerCase().indexOf(searchText) >= 0) {
 					addMarker(Poi.index);
-					return Poi.index;
+					return Poi;
 				}
 				else {
 					removeMarker(Poi.index);
