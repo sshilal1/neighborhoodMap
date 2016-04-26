@@ -73,6 +73,8 @@ var pointsOfInterest = [
 	}
 ]
 
+var hoveredIcon = 'http://mt.google.com/vt/icon?psize=25&font=fonts/Roboto-Bold.ttf&color=ff135C13&name=icons/spotlight/spotlight-waypoint-a.png&ax=44&ay=50&text=%E2%80%A2'
+var standardIcon = 'http://mt.googleapis.com/vt/icon/name=icons/spotlight/spotlight-poi.png&scale=1'
 var googleAPIkey = 'AIzaSyBdPs-DH6pWE-_DYa6jKEGBYtgcWvDW6-Q';
 var yelpKey = 'R9P1G_amYFdC5Uo14SeMHw';
 var cityLatLng = {lat: 61.1881, lng: -149.90};
@@ -122,6 +124,14 @@ function bindInfoWindow(marker, map, infowindow, html, i) {
         infowindow.setContent(html);
         infowindow.open(map, this);
     });
+	
+	marker.addListener('mouseover', function() {
+        highlightMarker(pointsOfInterest[i].entryNum);
+    });
+	
+	marker.addListener('mouseout', function() {
+        unHighlightMarker(pointsOfInterest[i].entryNum);
+    });
 
     // Need this to call trigger events on the marker
     pointsOfInterest[i].gMarker = marker;
@@ -136,6 +146,14 @@ function setMapToPoi(poi) {
 	});
 	map.setZoom(17);
 	google.maps.event.trigger(pointsOfInterest[poi.index].gMarker, 'click');
+}
+
+function highlightMarker(poiIndex) {
+	pointsOfInterest[poiIndex].gMarker.setIcon(hoveredIcon);
+}
+
+function unHighlightMarker(poiIndex) {
+	pointsOfInterest[poiIndex].gMarker.setIcon(standardIcon);
 }
 
 function resetMapZoom() {
@@ -180,6 +198,14 @@ var Poi = function(data) {
 var ViewModel = function() {
 
 	var self = this;
+	
+	this.mouseHovered = function(clickedPoi) {
+		highlightMarker(clickedPoi.index);
+	}
+	
+    this.mouseGone = function(clickedPoi) {
+		unHighlightMarker(clickedPoi.index);
+	}
 
 	self.initialize = ko.observable(true);
 

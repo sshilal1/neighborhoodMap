@@ -14,7 +14,7 @@
 	  <button data-bind="click: resetMapZoom">Reset Zoom</button>
 	  <button data-bind="click: removeMarkers">Remove Marks</button>
     	<ul id="searchResults" data-bind="foreach: masterList">
-    		<li class="searchElem" data-bind="click: $parent.setPoi">
+    		<li class="searchElem" data-bind=" event: { mouseover: $parent.mouseHovered, mouseout: $parent.mouseGone }, click: $parent.setPoi">
 			  <div style="font-size:18px; font-weight:bold;" data-bind="text: title"></div>
 			  <p style="font-size:14px;" data-bind="text: streetAddr"></p>
 			</li>
