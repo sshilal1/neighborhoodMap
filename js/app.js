@@ -86,10 +86,8 @@ var pointsOfInterest = [
 var hoveredIcon = 'http://mt.google.com/vt/icon?psize=25&font=fonts/Roboto-Bold.ttf&color=ff135C13&name=icons/spotlight/spotlight-waypoint-a.png&ax=44&ay=50&text=%E2%80%A2'
 var standardIcon = 'http://mt.googleapis.com/vt/icon/name=icons/spotlight/spotlight-poi.png&scale=1'
 var googleAPIkey = 'AIzaSyBdPs-DH6pWE-_DYa6jKEGBYtgcWvDW6-Q';
-var yelpKey = 'R9P1G_amYFdC5Uo14SeMHw';
 var curTime = Date.now();
 curTime = 1461700022189;
-var yelpURL = 'https://api.yelp.com/v2/search?term=Food&location=Anchorage, AK&sort=1&limit=10&oauth_consumer_key=R9P1G_amYFdC5Uo14SeMHw&oauth_token=CZzMTRD-t9h-PccH-2rVUCeaa-SetctZ&oauth_signature_method=HMAC-SHA1&oauth_signature=yL7XOcZhr_148DFeoCVkRrIl6gA&oauth_timestamp=1461700022189&oauth_nonce=u2q3OMmc0CE';
 var cityLatLng = {lat: 61.1881, lng: -149.90};
 
 // Creates the map. called in the Startup function
