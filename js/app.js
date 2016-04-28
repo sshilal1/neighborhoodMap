@@ -129,7 +129,7 @@ var generateContentString = function () {
         success: function (results) {
         	for (i=0; i<results.businesses.length;i++) {
 
-        		var foodCategories = [];
+        		var foodCategories = ['food'];
         		for (j=0; j<results.businesses[i].categories.length;j++) {
         			foodCategories.push(results.businesses[i].categories[j][1]);
         		}
