@@ -145,6 +145,7 @@ var generateContentString = function (poiReturned) {
 					entryNum: 6 + i,
 					gMarker: ko.observable(true)
         		}
+
         		//pointsOfInterest.push(poi);
 				if(typeof poiReturned !== "undefined") {
 					poiReturned.push(poi);
@@ -181,7 +182,7 @@ function initMap() {
 
 	// Call to instantiate the markers
 	//setTimeout(function() {makeMarkers();},100);
-	//makeMarkers()
+	makeMarkers()
 	
 }
 
@@ -225,20 +226,19 @@ function makeMarker(poi) {
 	});
 
 	marker.addListener('click', function() {
-        infowindow.setContent(html);
+        infowindow.setContent(infoContent);
         infowindow.open(map, this);
     });
 	
 	marker.addListener('mouseover', function() {
-        highlightMarker(poi.entryNum);
+        highlightMarker(poi.index);
     });
 	
 	marker.addListener('mouseout', function() {
-        unHighlightMarker(poi.entryNum);
+        unHighlightMarker(poi.index);
     });
 
-    poi.gMarker = marker;
-
+    return marker;
 }
 
 // This function creates an info window, binds it to the marker, and then sets the gMarker object as the built marker
@@ -268,7 +268,7 @@ function setMapToPoi(poi) {
 		lng : poi.poiLng
 	});
 	map.setZoom(17);
-	google.maps.event.trigger(pointsOfInterest[poi.index].gMarker, 'click');
+	google.maps.event.trigger(poi.gMarker, 'click');
 }
 
 function highlightMarker(poiIndex) {
@@ -298,25 +298,12 @@ function addMarkers() {
 	}
 }
 
-function removeMarker(poiIndex) {
-	pointsOfInterest[poiIndex].gMarker.setVisible(false);
+function removeMarker(poi) {
+	poi.gMarker.setVisible(false);
 }
 
-function addMarker(poiIndex) {
-	pointsOfInterest[poiIndex].gMarker.setVisible(true);
-}
-
-// A POI object created from the array pointsOfInterest
-var Poi = function(data) {
-	this.title = data.title;
-	this.categories = data.categories;
-	this.poiLat = data.poiLat;
-	this.poiLng = data.poiLng;
-	this.streetAddr = data.streetAddr;
-	this.cityAddr = data.cityAddr;
-	this.imgSrc = data.imgSrc;
-	this.index = data.entryNum;
-	this.gMarker = data.gMarker;
+function addMarker(poi) {
+	poi.gMarker.setVisible(true);
 }
 
 //setTimeout(function() {
@@ -375,11 +362,11 @@ var Poi = function(data) {
 				return ko.utils.arrayFilter(this.mediatorList(), function(Poi) {
 					for (i=0;i<Poi.categories.length;i++) { //
 						if ((Poi.title.toLowerCase().indexOf(searchText) >= 0)||(Poi.categories[i].indexOf(searchText) >= 0)) {
-							//addMarker(Poi.index);
+							addMarker(Poi);
 							return Poi;
 						}
 						else {
-							//removeMarker(Poi.index);
+							removeMarker(Poi);
 						}
 					}
 				});
