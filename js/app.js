@@ -146,7 +146,9 @@ var generateContentString = function (poiReturned) {
 					gMarker: ko.observable(true)
         		}
         		//pointsOfInterest.push(poi);
-        		poiReturned.push(poi);
+				if(typeof poiReturned !== "undefined") {
+					poiReturned.push(poi);
+				}
         	}
         	yelpResults = results;
         },
@@ -179,7 +181,7 @@ function initMap() {
 
 	// Call to instantiate the markers
 	//setTimeout(function() {makeMarkers();},100);
-	makeMarkers()
+	//makeMarkers()
 	
 }
 
@@ -222,7 +224,20 @@ function makeMarker(poi) {
 		title: poi.title
 	});
 
-	bindInfoWindow(marker, map, infowindow, infoContent, i);
+	marker.addListener('click', function() {
+        infowindow.setContent(html);
+        infowindow.open(map, this);
+    });
+	
+	marker.addListener('mouseover', function() {
+        highlightMarker(poi.entryNum);
+    });
+	
+	marker.addListener('mouseout', function() {
+        unHighlightMarker(poi.entryNum);
+    });
+
+    poi.gMarker = marker;
 
 }
 
@@ -293,15 +308,15 @@ function addMarker(poiIndex) {
 
 // A POI object created from the array pointsOfInterest
 var Poi = function(data) {
-	this.title = ko.observable(data.title);
+	this.title = data.title;
 	this.categories = data.categories;
 	this.poiLat = data.poiLat;
 	this.poiLng = data.poiLng;
-	this.streetAddr = ko.observable(data.streetAddr);
+	this.streetAddr = data.streetAddr;
 	this.cityAddr = data.cityAddr;
 	this.imgSrc = data.imgSrc;
 	this.index = data.entryNum;
-	this.marker = data.gMarker;
+	this.gMarker = data.gMarker;
 }
 
 //setTimeout(function() {
@@ -311,38 +326,36 @@ var Poi = function(data) {
 		var self = this;
 		
 		this.mouseHovered = function(clickedPoi) {
-			highlightMarker(clickedPoi.index);
+			//highlightMarker(clickedPoi.index);
 		}
 		
 	    this.mouseGone = function(clickedPoi) {
-			unHighlightMarker(clickedPoi.index);
+			//unHighlightMarker(clickedPoi.index);
 		}
 
 		// Necessary for first application of markers/list items
-		self.initialize = ko.observable(true);
+		//self.initialize = ko.observable(true);
 
-		this.poiList = ko.observableArray([]);
-
+		this.poiList = ko.observableArray();
+		
 		pointsOfInterest.forEach(function(locInfo) {
-			self.poiList.push(new Poi(locInfo));
+			self.poiList.push((locInfo));
 		});
 
 		self.poiReturned = ko.observableArray();
 
 		generateContentString(self.poiReturned);
-
-		self.logReturnedPois = ko.computed(function() {
-			console.log('self.poiReturned', self.poiReturned().pop());
-			self.poiList.push((self.poiReturned().pop()));
-		});
+		
+		this.mediatorList = ko.computed(function() {
+			var newList = self.poiList().concat(self.poiReturned());
+			return newList.sort(function (left,right) {
+				return left.title == right.title ? 0 : (left.title < right.title ? -1 : 1)
+			});
+		},this);
 
 		this.setPoi = function(clickedPoi) {
 			setMapToPoi(clickedPoi);
 		}
-		
-		this.poiList.sort(function (left,right) {
-			return left.title() == right.title() ? 0 : (left.title() < right.title() ? -1 : 1)
-		});
 
 		this.searchFor = ko.observable('');
 
@@ -350,23 +363,23 @@ var Poi = function(data) {
 		this.masterList = ko.computed(function() {
 			var searchText = this.searchFor().toLowerCase();
 
-			if (!searchText) {
+			if (!searchText) {/*
 				if (!self.initialize()) {
-					addMarkers();
+					//addMarkers();
 				}
-				self.initialize(false);
-				return this.poiList();
+				self.initialize(false);*/
+				return this.mediatorList();
 			}
 
 			else {
-				return ko.utils.arrayFilter(this.poiList(), function(Poi) {
-					for (i=0;i<Poi.categories.length;i++) {
-						if ((Poi.title().toLowerCase().indexOf(searchText) >= 0)||(Poi.categories[i].indexOf(searchText) >= 0)) {
-							addMarker(Poi.index);
+				return ko.utils.arrayFilter(this.mediatorList(), function(Poi) {
+					for (i=0;i<Poi.categories.length;i++) { //
+						if ((Poi.title.toLowerCase().indexOf(searchText) >= 0)||(Poi.categories[i].indexOf(searchText) >= 0)) {
+							//addMarker(Poi.index);
 							return Poi;
 						}
 						else {
-							removeMarker(Poi.index);
+							//removeMarker(Poi.index);
 						}
 					}
 				});
