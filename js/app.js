@@ -90,7 +90,7 @@ var pointsOfInterest = [
 ]
 
 var yelpResults;
-var generateContentString = function () {
+var generateContentString = function (poiReturned) {
 
   var consumerKey = "R9P1G_amYFdC5Uo14SeMHw"; 
 	var consumerSecret = "ca1mp3HeWZy2ZK-SkHxhMm_f8Wk";
@@ -145,7 +145,8 @@ var generateContentString = function () {
 					entryNum: 6 + i,
 					gMarker: ko.observable(true)
         		}
-        		pointsOfInterest.push(poi);
+        		//pointsOfInterest.push(poi);
+        		poiReturned.push(poi);
         	}
         	yelpResults = results;
         },
@@ -177,7 +178,8 @@ function initMap() {
 	infowindow = new google.maps.InfoWindow();
 
 	// Call to instantiate the markers
-	setTimeout(function() {makeMarkers();},100);
+	//setTimeout(function() {makeMarkers();},100);
+	makeMarkers()
 	
 }
 
@@ -202,6 +204,26 @@ function makeMarkers() {
 
 		bindInfoWindow(marker, map, infowindow, infoContent, i);
 	}
+}
+
+function makeMarker(poi) {
+
+	var latLongPos =  {lat: poi.poiLat, lng: poi.poiLng};
+
+	var infoContent = '<div class="infoContentBlock">' +
+		'<h2>' + poi.title +
+		//'</div><div class=iWBlurp>' + pointsOfInterest[i].blurp +
+		'</h2><img src="' + poi.imgSrc +
+		'"</img></div>';
+
+	var marker = new google.maps.Marker( {
+		position: latLongPos,
+		map: map,
+		title: poi.title
+	});
+
+	bindInfoWindow(marker, map, infowindow, infoContent, i);
+
 }
 
 // This function creates an info window, binds it to the marker, and then sets the gMarker object as the built marker
@@ -273,14 +295,16 @@ function addMarker(poiIndex) {
 var Poi = function(data) {
 	this.title = ko.observable(data.title);
 	this.categories = data.categories;
-	this.streetAddr = ko.observable(data.streetAddr);
 	this.poiLat = data.poiLat;
 	this.poiLng = data.poiLng;
+	this.streetAddr = ko.observable(data.streetAddr);
+	this.cityAddr = data.cityAddr;
+	this.imgSrc = data.imgSrc;
 	this.index = data.entryNum;
-	this.marker = ko.observable(data.gMarker);
+	this.marker = data.gMarker;
 }
 
-setTimeout(function() {
+//setTimeout(function() {
 	// The viewModel to be instantiated with knockout
 	var ViewModel = function() {
 
@@ -301,6 +325,15 @@ setTimeout(function() {
 
 		pointsOfInterest.forEach(function(locInfo) {
 			self.poiList.push(new Poi(locInfo));
+		});
+
+		self.poiReturned = ko.observableArray();
+
+		generateContentString(self.poiReturned);
+
+		self.logReturnedPois = ko.computed(function() {
+			console.log('self.poiReturned', self.poiReturned().pop());
+			self.poiList.push((self.poiReturned().pop()));
 		});
 
 		this.setPoi = function(clickedPoi) {
@@ -342,7 +375,7 @@ setTimeout(function() {
 	}
 
 	ko.applyBindings(new ViewModel());
-}, 1000);
+//}, 1000);
 
 
 //console.log(yelpResults);
