@@ -23,6 +23,7 @@ function startUp() {
 var pointsOfInterest = [
 	{
 		title: 'Alaska Zoo',
+		categories: ['fun','nature','animals'],
 		poiLat: 61.123739,
 		poiLng: -149.791815,
 		streetAddr: '4731 OMalley Rd',
@@ -33,6 +34,7 @@ var pointsOfInterest = [
 	},
 	{
 		title: 'Tony Knowles Coastal Bicycle Trail',
+		categories: ['fun','nature'],
 		poiLat: 61.201475,
 		poiLng: -149.954129,
 		streetAddr: '810 W 2nd Ave',
@@ -43,6 +45,7 @@ var pointsOfInterest = [
 	},
 	{
 		title: 'Alaska Railroad Depot',
+		categories: ['history'],
 		poiLat: 61.221696,
 		poiLng: -149.89019,
 		streetAddr: '411 W. 1st Ave',
@@ -53,6 +56,7 @@ var pointsOfInterest = [
 	},
 	{
 		title: 'Anchorage Museam at Rasmuson Center',
+		categories: ['fun','history'],
 		poiLat: 61.216093,
 		poiLng: -149.884613,
 		streetAddr: '625 C Street',
@@ -63,6 +67,7 @@ var pointsOfInterest = [
 	},
 	{
 		title: 'Alaska Native Heritage Center',
+		categories: ['fun','history','nature'],
 		poiLat: 61.232818,
 		poiLng: -149.717059,
 		streetAddr: '8800 Heritage Center Dr',
@@ -73,6 +78,7 @@ var pointsOfInterest = [
 	},
 	{
 		title: 'Alaska Center for the Performing Arts',
+		categories: ['fun','history','music'],
 		poiLat: 61.2172,
 		poiLng: -149.8956,
 		streetAddr: '621 W 6th Ave',
@@ -83,11 +89,79 @@ var pointsOfInterest = [
 	}
 ]
 
+var yelpResults;
+var generateContentString = function () {
+
+  var consumerKey = "R9P1G_amYFdC5Uo14SeMHw"; 
+	var consumerSecret = "ca1mp3HeWZy2ZK-SkHxhMm_f8Wk";
+	var accessToken = "CZzMTRD-t9h-PccH-2rVUCeaa-SetctZ";
+	var accessTokenSecret = "yL7XOcZhr_148DFeoCVkRrIl6gA";
+
+    function nonce_generate() {
+        return (Math.floor(Math.random() * 1e12).toString());
+    }
+
+    var yelp_url = "http://api.yelp.com/v2/search/";
+
+    var parameters = {
+        oauth_consumer_key: consumerKey,
+        oauth_token: accessToken,
+        oauth_nonce: nonce_generate(),
+        oauth_timestamp: Math.floor(Date.now() / 1000),
+        oauth_signature_method: 'HMAC-SHA1',
+        oauth_version: '1.0',
+        callback: 'cb',
+        term: 'food',
+        location: 'Anchorage,AK',
+        sort: 2,
+        limit: 20
+
+    };
+
+    var encodedSignature = oauthSignature.generate('GET', yelp_url, parameters, consumerSecret, accessTokenSecret);
+    parameters.oauth_signature = encodedSignature;
+
+    var settings = {
+        url: yelp_url,
+        data: parameters,
+        cache: true,
+        dataType: 'jsonp',
+        success: function (results) {
+        	for (i=0; i<results.businesses.length;i++) {
+
+        		var foodCategories = [];
+        		for (j=0; j<results.businesses[i].categories.length;j++) {
+        			foodCategories.push(results.businesses[i].categories[j][1]);
+        		}
+        		
+        		var poi = {
+        			title: results.businesses[i].name,
+        			categories: foodCategories,
+					poiLat: results.businesses[i].location.coordinate.latitude,
+					poiLng: results.businesses[i].location.coordinate.longitude,
+					streetAddr: results.businesses[i].location.address[0],
+					cityAddr: 'Anchorage, AK ' + results.businesses[i].location.postal_code,
+					imgSrc: results.businesses[i].image_url,
+					entryNum: 6 + i,
+					gMarker: ko.observable(true)
+        		}
+        		pointsOfInterest.push(poi);
+        	}
+        	yelpResults = results;
+        },
+        error: function () {
+            console.log("doesnt work");
+        }
+    };
+    $.ajax(settings);
+};
+
+generateContentString();
+
 var hoveredIcon = 'http://mt.google.com/vt/icon?psize=25&font=fonts/Roboto-Bold.ttf&color=ff135C13&name=icons/spotlight/spotlight-waypoint-a.png&ax=44&ay=50&text=%E2%80%A2'
 var standardIcon = 'http://mt.googleapis.com/vt/icon/name=icons/spotlight/spotlight-poi.png&scale=1'
 var googleAPIkey = 'AIzaSyBdPs-DH6pWE-_DYa6jKEGBYtgcWvDW6-Q';
-var curTime = Date.now();
-curTime = 1461700022189;
+
 var cityLatLng = {lat: 61.1881, lng: -149.90};
 
 // Creates the map. called in the Startup function
@@ -103,7 +177,8 @@ function initMap() {
 	infowindow = new google.maps.InfoWindow();
 
 	// Call to instantiate the markers
-	makeMarkers();
+	setTimeout(function() {makeMarkers();},100);
+	
 }
 
 // This function makes the markers
@@ -197,6 +272,7 @@ function addMarker(poiIndex) {
 // A POI object created from the array pointsOfInterest
 var Poi = function(data) {
 	this.title = ko.observable(data.title);
+	this.categories = data.categories;
 	this.streetAddr = ko.observable(data.streetAddr);
 	this.poiLat = data.poiLat;
 	this.poiLng = data.poiLng;
@@ -204,63 +280,69 @@ var Poi = function(data) {
 	this.marker = ko.observable(data.gMarker);
 }
 
-// http://jsfiddle.net/Lvuvh2pc/33/
-// The viewModel to be instantiated with knockout
-var ViewModel = function() {
+setTimeout(function() {
+	// The viewModel to be instantiated with knockout
+	var ViewModel = function() {
 
-	var self = this;
-	
-	this.mouseHovered = function(clickedPoi) {
-		highlightMarker(clickedPoi.index);
-	}
-	
-    this.mouseGone = function(clickedPoi) {
-		unHighlightMarker(clickedPoi.index);
-	}
+		var self = this;
+		
+		this.mouseHovered = function(clickedPoi) {
+			highlightMarker(clickedPoi.index);
+		}
+		
+	    this.mouseGone = function(clickedPoi) {
+			unHighlightMarker(clickedPoi.index);
+		}
 
-	// Necessary for first application of markers/list items
-	self.initialize = ko.observable(true);
+		// Necessary for first application of markers/list items
+		self.initialize = ko.observable(true);
 
-	this.poiList = ko.observableArray([]);
+		this.poiList = ko.observableArray([]);
 
-	pointsOfInterest.forEach(function(locInfo) {
-		self.poiList.push(new Poi(locInfo));
-	});
+		pointsOfInterest.forEach(function(locInfo) {
+			self.poiList.push(new Poi(locInfo));
+		});
 
-	this.setPoi = function(clickedPoi) {
-		setMapToPoi(clickedPoi);
-	}
-	
-	this.poiList.sort(function (left,right) {
-		return left.title() == right.title() ? 0 : (left.title() < right.title() ? -1 : 1)
-	});
+		this.setPoi = function(clickedPoi) {
+			setMapToPoi(clickedPoi);
+		}
+		
+		this.poiList.sort(function (left,right) {
+			return left.title() == right.title() ? 0 : (left.title() < right.title() ? -1 : 1)
+		});
 
-	this.searchFor = ko.observable('');
+		this.searchFor = ko.observable('');
 
-	// The final list of elements displayed, filtered by the search
-	this.masterList = ko.computed(function() {
-		var searchText = this.searchFor().toLowerCase();
+		// The final list of elements displayed, filtered by the search
+		this.masterList = ko.computed(function() {
+			var searchText = this.searchFor().toLowerCase();
 
-		if (!searchText) {
-			if (!self.initialize()) {
-				addMarkers();
+			if (!searchText) {
+				if (!self.initialize()) {
+					addMarkers();
+				}
+				self.initialize(false);
+				return this.poiList();
 			}
-			self.initialize(false);
-			return this.poiList();
-		}
 
-		else {
-			return ko.utils.arrayFilter(this.poiList(), function(Poi) {
-				if (Poi.title().toLowerCase().indexOf(searchText) >= 0) {
-					addMarker(Poi.index);
-					return Poi;
-				}
-				else {
-					removeMarker(Poi.index);
-				}
-			});
-		}
-	}, this);
-}
+			else {
+				return ko.utils.arrayFilter(this.poiList(), function(Poi) {
+					for (i=0;i<Poi.categories.length;i++) {
+						if ((Poi.title().toLowerCase().indexOf(searchText) >= 0)||(Poi.categories[i].indexOf(searchText) >= 0)) {
+							addMarker(Poi.index);
+							return Poi;
+						}
+						else {
+							removeMarker(Poi.index);
+						}
+					}
+				});
+			}
+		}, this);
+	}
 
-ko.applyBindings(new ViewModel());
+	ko.applyBindings(new ViewModel());
+}, 1000);
+
+
+//console.log(yelpResults);
