@@ -53,16 +53,3 @@ li:hover {
 #map {
 	height: 100%;
 }
-
-.infoContentBlock {
-	max-width: 300px;
-}
-
-.iWTitle {
-	font-size: 18px;
-}
-
-img {
-	width: 100%;
-	max-width: 250px;
-}

@@ -4,14 +4,11 @@
 ------------ on surrouding activities/ recreation.
 ----------------------------------------------------
 ------------ Developed by: Stephen Shilale
------------- 4/21/2016
+------------ 4/28/2016
 */
 
-// Runs the 'startUp' function on window load
-window.onload = startUp;
-
 // Made the map script creation here instead of in the html
-function startUp() {
+function buildMap() {
 	var mapScript = document.createElement('script');
 	mapScript.type = 'text/javascript';
 	mapScript.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyBdPs-DH6pWE-_DYa6jKEGBYtgcWvDW6-Q&callback=initMap';
@@ -29,7 +26,8 @@ var pointsOfInterest = [
 		streetAddr: '4731 OMalley Rd',
 		cityAddr: 'Anchorage, AK 99507',
 		imgSrc: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Alaska_Zoo,_Anchorage.jpg/250px-Alaska_Zoo,_Anchorage.jpg',
-		entryNum: 0,
+		blurb: 'The zoo has the widest variety of animals native to the state of Alaska as well as some exotics such as Amur tigers, Bactrian camels, and yaks',
+		index: 0,
 		gMarker: ko.observable(true)
 	},
 	{
@@ -40,7 +38,8 @@ var pointsOfInterest = [
 		streetAddr: '810 W 2nd Ave',
 		cityAddr: 'Anchorage, AK 99501',
 		imgSrc: 'https://upload.wikimedia.org/wikipedia/commons/e/e3/Tony_Knowles_Coastal_Trail.jpg',
-		entryNum: 1,
+		blurb: 'The Tony Knowles Coastal Trail is an 11-mile long trail along the coast of Anchorage, Alaska designated for non-motorized use',
+		index: 1,
 		gMarker: ko.observable(true)
 	},
 	{
@@ -51,7 +50,8 @@ var pointsOfInterest = [
 		streetAddr: '411 W. 1st Ave',
 		cityAddr: 'Anchorage, AK 99501',
 		imgSrc: 'https://c2.staticflickr.com/4/3294/2850221419_32d4858871.jpg',
-		entryNum: 2,
+		blurb: 'Anchorage Depot is the railroad station at the center of the Alaska Railroad system. It serves as the starting point for many tourists traveling on the luxury trains.',
+		index: 2,
 		gMarker: ko.observable(true)
 	},
 	{
@@ -62,7 +62,8 @@ var pointsOfInterest = [
 		streetAddr: '625 C Street',
 		cityAddr: 'Anchorage, AK 99501',
 		imgSrc: 'https://affiliations.si.edu/media_images/data/Anchorage%20Museum.jpg',
-		entryNum: 3,
+		blurb: 'The Anchorage Museum is a large art, history, ethnography, ecology and science museum. It is dedicated to studying and exploring the land, peoples, art and history of Alaska.',
+		index: 3,
 		gMarker: ko.observable(true)
 	},
 	{
@@ -73,7 +74,8 @@ var pointsOfInterest = [
 		streetAddr: '8800 Heritage Center Dr',
 		cityAddr: 'Anchorage, AK 99501',
 		imgSrc: 'http://www.alaska.org/photos/gallery3/var/albums/anchorage-photos/anchorage-attractions/Alaska-Native-Heritage-Center/Alaska-Native-Heritage-Center-03-347796285.jpg?m=1385595257',
-		entryNum: 4,
+		blurb: 'The Alaska Native Heritage Center is an educational and cultural institution for all Alaskans. The Alaska Native Heritage Center shares the heritage of Alaskas 11 major cultural groups',
+		index: 4,
 		gMarker: ko.observable(true)
 	},
 	{
@@ -84,12 +86,12 @@ var pointsOfInterest = [
 		streetAddr: '621 W 6th Ave',
 		cityAddr: 'Anchorage, AK 99501',
 		imgSrc: 'http://events-media.nationalgeographic.com/media/images/photos/AlaskaCenter2-dl_jpg_610x343_crop_upscale_q85.jpg',
-		entryNum: 5,
+		blurb: 'The Alaska Center for the Performing Arts is a performance venue in downtown Anchorage, Alaska. Opened in 1988, it entertains over 200,000 patrons annually, and consists of three theaters',
+		index: 5,
 		gMarker: ko.observable(true)
 	}
 ]
 
-var yelpResults;
 var generateContentString = function (poiReturned) {
 
   var consumerKey = "R9P1G_amYFdC5Uo14SeMHw"; 
@@ -127,6 +129,7 @@ var generateContentString = function (poiReturned) {
         cache: true,
         dataType: 'jsonp',
         success: function (results) {
+
         	for (i=0; i<results.businesses.length;i++) {
 
         		var foodCategories = ['food'];
@@ -142,15 +145,18 @@ var generateContentString = function (poiReturned) {
 					streetAddr: results.businesses[i].location.address[0],
 					cityAddr: 'Anchorage, AK ' + results.businesses[i].location.postal_code,
 					imgSrc: results.businesses[i].image_url,
-					entryNum: 6 + i,
+					blurb: results.businesses[i].snippet_text,
+					index: 6 + i,
 					gMarker: ko.observable(true)
         		}
 
-        		//pointsOfInterest.push(poi);
-				if(typeof poiReturned !== "undefined") {
-					poiReturned.push(poi);
-				}
+
+				poiReturned.push(poi);
+				pointsOfInterest.push(poi);
         	}
+
+        	buildMap();
+
         	yelpResults = results;
         },
         error: function () {
@@ -160,15 +166,13 @@ var generateContentString = function (poiReturned) {
     $.ajax(settings);
 };
 
-generateContentString();
-
 var hoveredIcon = 'http://mt.google.com/vt/icon?psize=25&font=fonts/Roboto-Bold.ttf&color=ff135C13&name=icons/spotlight/spotlight-waypoint-a.png&ax=44&ay=50&text=%E2%80%A2'
 var standardIcon = 'http://mt.googleapis.com/vt/icon/name=icons/spotlight/spotlight-poi.png&scale=1'
 var googleAPIkey = 'AIzaSyBdPs-DH6pWE-_DYa6jKEGBYtgcWvDW6-Q';
 
 var cityLatLng = {lat: 61.1881, lng: -149.90};
 
-// Creates the map. called in the Startup function
+// Creates the map and markers. called in the buildMap function
 function initMap() {
 
 	// New map centered on Anchorage
@@ -181,8 +185,7 @@ function initMap() {
 	infowindow = new google.maps.InfoWindow();
 
 	// Call to instantiate the markers
-	//setTimeout(function() {makeMarkers();},100);
-	makeMarkers()
+	makeMarkers();
 	
 }
 
@@ -193,52 +196,23 @@ function makeMarkers() {
 
 		var latLongPos =  {lat: pointsOfInterest[i].poiLat, lng: pointsOfInterest[i].poiLng};
 
-		var infoContent = '<div class="infoContentBlock">' +
-			'<h2>' + pointsOfInterest[i].title +
-			//'</div><div class=iWBlurp>' + pointsOfInterest[i].blurp +
-			'</h2><img src="' + pointsOfInterest[i].imgSrc +
-			'"</img></div>';
+		var infoContent = '<div style="width:400px;overflow:hidden;">' +
+			'<h3 style="">' + pointsOfInterest[i].title +
+			'</h3><div style="display:flex;">' +
+			'<img src="' + pointsOfInterest[i].imgSrc +
+			'"style="max-height:100px;"</img>' +
+			'<p style="margin:0;padding-left:10px;word-wrap:break-word;">' + pointsOfInterest[i].blurb +
+			'</p></div></div>';
 
 		var marker = new google.maps.Marker( {
 			position: latLongPos,
 			map: map,
+			animation: google.maps.Animation.DROP,
 			title: pointsOfInterest[i].title
 		});
 
 		bindInfoWindow(marker, map, infowindow, infoContent, i);
 	}
-}
-
-function makeMarker(poi) {
-
-	var latLongPos =  {lat: poi.poiLat, lng: poi.poiLng};
-
-	var infoContent = '<div class="infoContentBlock">' +
-		'<h2>' + poi.title +
-		//'</div><div class=iWBlurp>' + pointsOfInterest[i].blurp +
-		'</h2><img src="' + poi.imgSrc +
-		'"</img></div>';
-
-	var marker = new google.maps.Marker( {
-		position: latLongPos,
-		map: map,
-		title: poi.title
-	});
-
-	marker.addListener('click', function() {
-        infowindow.setContent(infoContent);
-        infowindow.open(map, this);
-    });
-	
-	marker.addListener('mouseover', function() {
-        highlightMarker(poi.index);
-    });
-	
-	marker.addListener('mouseout', function() {
-        unHighlightMarker(poi.index);
-    });
-
-    return marker;
 }
 
 // This function creates an info window, binds it to the marker, and then sets the gMarker object as the built marker
@@ -249,16 +223,17 @@ function bindInfoWindow(marker, map, infowindow, html, i) {
     });
 	
 	marker.addListener('mouseover', function() {
-        highlightMarker(pointsOfInterest[i].entryNum);
+        highlightMarker(pointsOfInterest[i].index);
     });
 	
 	marker.addListener('mouseout', function() {
-        unHighlightMarker(pointsOfInterest[i].entryNum);
+        unHighlightMarker(pointsOfInterest[i].index);
     });
 
     // Need this to call trigger events on the marker
     pointsOfInterest[i].gMarker = marker;
 }
+
 
 // This function is called when a user clicks on the list view object
 // Sets the view onto the selected location, and opens the info window
@@ -272,7 +247,10 @@ function setMapToPoi(poi) {
 }
 
 function highlightMarker(poiIndex) {
+	// One bounce takes 750 ms
 	pointsOfInterest[poiIndex].gMarker.setIcon(hoveredIcon);
+	pointsOfInterest[poiIndex].gMarker.setAnimation(google.maps.Animation.BOUNCE);
+	setTimeout(function(){ pointsOfInterest[poiIndex].gMarker.setAnimation(null); }, 750);
 }
 
 function unHighlightMarker(poiIndex) {
@@ -284,98 +262,73 @@ function resetMapZoom() {
 	map.setZoom(11);
 }
 
-function removeMarkers() {
-	for (i = 0; i < pointsOfInterest.length; i++) {
-		pointsOfInterest[i].gMarker.setVisible(false);
-	}
-}
-
-function addMarkers() {
-	if (pointsOfInterest[0].gMarker != null) {
-		for (i = 0; i < pointsOfInterest.length; i++) {
-			pointsOfInterest[i].gMarker.setVisible(true);
-		}
-	}
-}
-
-function removeMarker(poi) {
+function hideMarker(poi) {
 	poi.gMarker.setVisible(false);
 }
 
-function addMarker(poi) {
+function showMarker(poi) {
 	poi.gMarker.setVisible(true);
 }
 
-//setTimeout(function() {
-	// The viewModel to be instantiated with knockout
-	var ViewModel = function() {
+// The viewModel to be instantiated with knockout
+var ViewModel = function() {
 
-		var self = this;
-		
-		this.mouseHovered = function(clickedPoi) {
-			//highlightMarker(clickedPoi.index);
-		}
-		
-	    this.mouseGone = function(clickedPoi) {
-			//unHighlightMarker(clickedPoi.index);
-		}
-
-		// Necessary for first application of markers/list items
-		//self.initialize = ko.observable(true);
-
-		this.poiList = ko.observableArray();
-		
-		pointsOfInterest.forEach(function(locInfo) {
-			self.poiList.push((locInfo));
-		});
-
-		self.poiReturned = ko.observableArray();
-
-		generateContentString(self.poiReturned);
-		
-		this.mediatorList = ko.computed(function() {
-			var newList = self.poiList().concat(self.poiReturned());
-			return newList.sort(function (left,right) {
-				return left.title == right.title ? 0 : (left.title < right.title ? -1 : 1)
-			});
-		},this);
-
-		this.setPoi = function(clickedPoi) {
-			setMapToPoi(clickedPoi);
-		}
-
-		this.searchFor = ko.observable('');
-
-		// The final list of elements displayed, filtered by the search
-		this.masterList = ko.computed(function() {
-			var searchText = this.searchFor().toLowerCase();
-
-			if (!searchText) {/*
-				if (!self.initialize()) {
-					//addMarkers();
-				}
-				self.initialize(false);*/
-				return this.mediatorList();
-			}
-
-			else {
-				return ko.utils.arrayFilter(this.mediatorList(), function(Poi) {
-					for (i=0;i<Poi.categories.length;i++) { //
-						if ((Poi.title.toLowerCase().indexOf(searchText) >= 0)||(Poi.categories[i].indexOf(searchText) >= 0)) {
-							addMarker(Poi);
-							return Poi;
-						}
-						else {
-							removeMarker(Poi);
-						}
-					}
-				});
-			}
-		}, this);
+	var self = this;
+	
+	this.mouseHovered = function(clickedPoi) {
+		highlightMarker(clickedPoi.index);
+	}
+	
+    this.mouseGone = function(clickedPoi) {
+		unHighlightMarker(clickedPoi.index);
 	}
 
-	ko.applyBindings(new ViewModel());
-//}, 1000);
+	this.setPoi = function(clickedPoi) {
+		setMapToPoi(clickedPoi);
+	}
 
+	// Add the initial pois
+	this.poiList = ko.observableArray();
+	pointsOfInterest.forEach(function(locInfo) {
+		self.poiList.push((locInfo));
+	});
 
-//console.log(yelpResults);
+	// Add the yelpAPI requested pois
+	self.poiReturned = ko.observableArray();
+	generateContentString(self.poiReturned);
+	
+	// Updating list dependent on both initial pois AND yelp-requested pois
+	this.mediatorList = ko.computed(function() {
+		var newList = self.poiList().concat(self.poiReturned());
+		return newList.sort(function (left,right) {
+			return left.title == right.title ? 0 : (left.title < right.title ? -1 : 1)
+		});
+	},this);
+
+	this.searchFor = ko.observable('');
+
+	// The final list of elements displayed, filtered by the search
+	this.masterList = ko.computed(function() {
+		var searchText = this.searchFor().toLowerCase();
+
+		if (!searchText) {
+			return this.mediatorList();
+		}
+
+		else {
+			return ko.utils.arrayFilter(this.mediatorList(), function(Poi) {
+				for (i=0;i<Poi.categories.length;i++) { //
+					if ((Poi.title.toLowerCase().indexOf(searchText) >= 0)||(Poi.categories[i].indexOf(searchText) >= 0)) {
+						showMarker(Poi);
+						return Poi;
+					}
+					else {
+						hideMarker(Poi);
+					}
+				}
+			});
+		}
+	}, this);
+}
+
+ko.applyBindings(new ViewModel());
