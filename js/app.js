@@ -92,6 +92,29 @@ var pointsOfInterest = [
 	}
 ]
 
+var viewport = {
+    width  : $(window).width(),
+    height : $(window).height()
+};
+console.log(viewport);
+
+$(document).ready(function () {
+	$("#toggle").click(function () {
+		if ($(this).data('name') == 'show') {
+			$("#searchMenu").animate({width: 0},500);
+			setTimeout(function() {$("#searchMenu").hide();}, 500); 
+			$(this).data('name', 'hide')
+			$(this).html("&#8680;");
+		} else {
+			$("#searchMenu").animate({
+				width: '100%'
+			},500).show();
+			$(this).data('name', 'show')
+			$(this).html("&#8678;");
+		}
+	});
+});
+
 var generateContentString = function (poiReturned) {
 
   var consumerKey = "R9P1G_amYFdC5Uo14SeMHw"; 
@@ -244,6 +267,11 @@ function setMapToPoi(poi) {
 	});
 	map.setZoom(17);
 	google.maps.event.trigger(poi.gMarker, 'click');
+	if (viewport.width < 500) {
+		$("#searchMenu").animate({width: 0},500);
+		setTimeout(function() {$("#searchMenu").hide();}, 500); 
+		$("#toggle").data('name', 'hide')
+	}
 }
 
 function highlightMarker(poiIndex) {
@@ -324,6 +352,7 @@ var ViewModel = function() {
 					}
 					else {
 						hideMarker(Poi);
+						//infowindow.close();
 					}
 				}
 			});

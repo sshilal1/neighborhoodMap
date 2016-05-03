@@ -12,8 +12,8 @@ li:hover {
 
 #searchMenu {
 	position: absolute;
-	top: 7%;
-	left: 2%;
+	top: 10%;
+	left: 12px;
 	max-width: 300px;
 	height: 545px;
 	background-color: green;
@@ -52,4 +52,22 @@ li:hover {
 
 #map {
 	height: 100%;
+}
+
+#toggle {
+	position: absolute;
+	top: 4.5%;
+	left: 10px;
+	z-index: 1;
+	background-color: green;
+    border: none;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 32px;
+    margin: 4px 2px;
+    cursor: pointer;
+	border-style: solid;
+    border-color: #4A2E2E;
+	-webkit-box-shadow: 2px 2px 5px #004d00;
 }
