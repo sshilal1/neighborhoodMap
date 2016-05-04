@@ -92,6 +92,8 @@ var pointsOfInterest = [
 	}
 ]
 
+var infoWIndowIndex = 0;
+
 var viewport = {
     width  : $(window).width(),
     height : $(window).height()
@@ -242,6 +244,7 @@ function makeMarkers() {
 function bindInfoWindow(marker, map, infowindow, html, i) {
     marker.addListener('click', function() {
         infowindow.setContent(html);
+		infoWIndowIndex = pointsOfInterest[i].index;
         infowindow.open(map, this);
     });
 	
@@ -291,6 +294,9 @@ function resetMapZoom() {
 }
 
 function hideMarker(poi) {
+	if (poi.index == infoWIndowIndex) {
+		infowindow.close()
+	}
 	poi.gMarker.setVisible(false);
 }
 
@@ -352,7 +358,6 @@ var ViewModel = function() {
 					}
 					else {
 						hideMarker(Poi);
-						//infowindow.close();
 					}
 				}
 			});
