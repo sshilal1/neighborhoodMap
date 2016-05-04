@@ -28,7 +28,7 @@ var pointsOfInterest = [
 		imgSrc: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Alaska_Zoo,_Anchorage.jpg/250px-Alaska_Zoo,_Anchorage.jpg',
 		blurb: 'The zoo has the widest variety of animals native to the state of Alaska as well as some exotics such as Amur tigers, Bactrian camels, and yaks',
 		index: 0,
-		gMarker: ko.observable(true)
+		gMarker: {}
 	},
 	{
 		title: 'Tony Knowles Coastal Bicycle Trail',
@@ -40,7 +40,7 @@ var pointsOfInterest = [
 		imgSrc: 'https://upload.wikimedia.org/wikipedia/commons/e/e3/Tony_Knowles_Coastal_Trail.jpg',
 		blurb: 'The Tony Knowles Coastal Trail is an 11-mile long trail along the coast of Anchorage, Alaska designated for non-motorized use',
 		index: 1,
-		gMarker: ko.observable(true)
+		gMarker: {}
 	},
 	{
 		title: 'Alaska Railroad Depot',
@@ -52,7 +52,7 @@ var pointsOfInterest = [
 		imgSrc: 'https://c2.staticflickr.com/4/3294/2850221419_32d4858871.jpg',
 		blurb: 'Anchorage Depot is the railroad station at the center of the Alaska Railroad system. It serves as the starting point for many tourists traveling on the luxury trains.',
 		index: 2,
-		gMarker: ko.observable(true)
+		gMarker: {}
 	},
 	{
 		title: 'Anchorage Museam at Rasmuson Center',
@@ -64,7 +64,7 @@ var pointsOfInterest = [
 		imgSrc: 'https://affiliations.si.edu/media_images/data/Anchorage%20Museum.jpg',
 		blurb: 'The Anchorage Museum is a large art, history, ethnography, ecology and science museum. It is dedicated to studying and exploring the land, peoples, art and history of Alaska.',
 		index: 3,
-		gMarker: ko.observable(true)
+		gMarker: {}
 	},
 	{
 		title: 'Alaska Native Heritage Center',
@@ -76,7 +76,7 @@ var pointsOfInterest = [
 		imgSrc: 'http://www.alaska.org/photos/gallery3/var/albums/anchorage-photos/anchorage-attractions/Alaska-Native-Heritage-Center/Alaska-Native-Heritage-Center-03-347796285.jpg?m=1385595257',
 		blurb: 'The Alaska Native Heritage Center is an educational and cultural institution for all Alaskans. The Alaska Native Heritage Center shares the heritage of Alaskas 11 major cultural groups',
 		index: 4,
-		gMarker: ko.observable(true)
+		gMarker: {}
 	},
 	{
 		title: 'Alaska Center for the Performing Arts',
@@ -88,30 +88,31 @@ var pointsOfInterest = [
 		imgSrc: 'http://events-media.nationalgeographic.com/media/images/photos/AlaskaCenter2-dl_jpg_610x343_crop_upscale_q85.jpg',
 		blurb: 'The Alaska Center for the Performing Arts is a performance venue in downtown Anchorage, Alaska. Opened in 1988, it entertains over 200,000 patrons annually, and consists of three theaters',
 		index: 5,
-		gMarker: ko.observable(true)
+		gMarker: {}
 	}
-]
+];
 
+// Gloabal info for infoWindow
 var infoWIndowIndex = 0;
 
+// GLoabal info on viewport
 var viewport = {
     width  : $(window).width(),
     height : $(window).height()
 };
-console.log(viewport);
 
 $(document).ready(function () {
 	$("#toggle").click(function () {
 		if ($(this).data('name') == 'show') {
 			$("#searchMenu").animate({width: 0},500);
 			setTimeout(function() {$("#searchMenu").hide();}, 500); 
-			$(this).data('name', 'hide')
+			$(this).data('name', 'hide');
 			$(this).html("&#8680;");
 		} else {
 			$("#searchMenu").animate({
 				width: '100%'
 			},500).show();
-			$(this).data('name', 'show')
+			$(this).data('name', 'show');
 			$(this).html("&#8678;");
 		}
 	});
@@ -155,10 +156,10 @@ var generateContentString = function (poiReturned) {
         dataType: 'jsonp',
         success: function (results) {
 
-        	for (i=0; i<results.businesses.length;i++) {
+        	for (i=0, len=results.businesses.length; i<len;i++) {
 
         		var foodCategories = ['food'];
-        		for (j=0; j<results.businesses[i].categories.length;j++) {
+        		for (j=0;j<results.businesses[i].categories.length;j++) {
         			foodCategories.push(results.businesses[i].categories[j][1]);
         		}
         		
@@ -172,28 +173,28 @@ var generateContentString = function (poiReturned) {
 					imgSrc: results.businesses[i].image_url,
 					blurb: results.businesses[i].snippet_text,
 					index: 6 + i,
-					gMarker: ko.observable(true)
-        		}
+					gMarker: {}
+        		};
 
 
 				poiReturned.push(poi);
 				pointsOfInterest.push(poi);
         	}
 
-        	buildMap();
-
         	yelpResults = results;
         },
-        error: function () {
-            console.log("doesnt work");
-        }
     };
-    $.ajax(settings);
+    $.ajax(settings)
+	.done(function () {
+		buildMap();
+	})
+	.fail(function () {
+		alert("Error loading data from Yelp");
+	});
 };
 
-var hoveredIcon = 'http://mt.google.com/vt/icon?psize=25&font=fonts/Roboto-Bold.ttf&color=ff135C13&name=icons/spotlight/spotlight-waypoint-a.png&ax=44&ay=50&text=%E2%80%A2'
-var standardIcon = 'http://mt.googleapis.com/vt/icon/name=icons/spotlight/spotlight-poi.png&scale=1'
-var googleAPIkey = 'AIzaSyBdPs-DH6pWE-_DYa6jKEGBYtgcWvDW6-Q';
+var hoveredIcon = 'http://mt.google.com/vt/icon?psize=25&font=fonts/Roboto-Bold.ttf&color=ff135C13&name=icons/spotlight/spotlight-waypoint-a.png&ax=44&ay=50&text=%E2%80%A2';
+var standardIcon = 'http://mt.googleapis.com/vt/icon/name=icons/spotlight/spotlight-poi.png&scale=1';
 
 var cityLatLng = {lat: 61.1881, lng: -149.90};
 
@@ -217,7 +218,7 @@ function initMap() {
 // This function makes the markers
 function makeMarkers() {
 	
-	for (i=0; i< pointsOfInterest.length; i++) {
+	for (i=0, len=pointsOfInterest.length; i<len; i++) {
 
 		var latLongPos =  {lat: pointsOfInterest[i].poiLat, lng: pointsOfInterest[i].poiLng};
 
@@ -273,7 +274,7 @@ function setMapToPoi(poi) {
 	if (viewport.width < 500) {
 		$("#searchMenu").animate({width: 0},500);
 		setTimeout(function() {$("#searchMenu").hide();}, 500); 
-		$("#toggle").data('name', 'hide')
+		$("#toggle").data('name', 'hide');
 	}
 }
 
@@ -288,14 +289,9 @@ function unHighlightMarker(poiIndex) {
 	pointsOfInterest[poiIndex].gMarker.setIcon(standardIcon);
 }
 
-function resetMapZoom() {
-	map.setCenter(cityLatLng);
-	map.setZoom(11);
-}
-
 function hideMarker(poi) {
 	if (poi.index == infoWIndowIndex) {
-		infowindow.close()
+		infowindow.close();
 	}
 	poi.gMarker.setVisible(false);
 }
@@ -311,15 +307,15 @@ var ViewModel = function() {
 	
 	this.mouseHovered = function(clickedPoi) {
 		highlightMarker(clickedPoi.index);
-	}
+	};
 	
     this.mouseGone = function(clickedPoi) {
 		unHighlightMarker(clickedPoi.index);
-	}
+	};
 
 	this.setPoi = function(clickedPoi) {
 		setMapToPoi(clickedPoi);
-	}
+	};
 
 	// Add the initial pois
 	this.poiList = ko.observableArray();
@@ -335,7 +331,7 @@ var ViewModel = function() {
 	this.mediatorList = ko.computed(function() {
 		var newList = self.poiList().concat(self.poiReturned());
 		return newList.sort(function (left,right) {
-			return left.title == right.title ? 0 : (left.title < right.title ? -1 : 1)
+			return left.title == right.title ? 0 : (left.title < right.title ? -1 : 1);
 		});
 	},this);
 
@@ -351,7 +347,7 @@ var ViewModel = function() {
 
 		else {
 			return ko.utils.arrayFilter(this.mediatorList(), function(Poi) {
-				for (i=0;i<Poi.categories.length;i++) { //
+				for (i=0, len=Poi.categories.length;i<len;i++) { //
 					if ((Poi.title.toLowerCase().indexOf(searchText) >= 0)||(Poi.categories[i].indexOf(searchText) >= 0)) {
 						showMarker(Poi);
 						return Poi;
@@ -363,6 +359,6 @@ var ViewModel = function() {
 			});
 		}
 	}, this);
-}
+};
 
 ko.applyBindings(new ViewModel());
