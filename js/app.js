@@ -11,7 +11,12 @@
 function buildMap() {
 	var mapScript = document.createElement('script');
 	mapScript.type = 'text/javascript';
+	mapScript.async = true;
 	mapScript.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyBdPs-DH6pWE-_DYa6jKEGBYtgcWvDW6-Q&callback=initMap';
+	mapScript.onerror = function() {
+		console.log("error loading google maps API");
+		alert("error loading google maps API");
+	}
 	document.body.appendChild(mapScript);
 }
 
@@ -250,7 +255,7 @@ function bindInfoWindow(marker, map, infowindow, html, i) {
     });
 	
 	marker.addListener('mouseover', function() {
-        highlightMarker(pointsOfInterest[i].index);
+		colorMarker(pointsOfInterest[i].index);
     });
 	
 	marker.addListener('mouseout', function() {
@@ -288,6 +293,11 @@ function highlightMarker(poiIndex) {
 function unHighlightMarker(poiIndex) {
 	pointsOfInterest[poiIndex].gMarker.setIcon(standardIcon);
 }
+
+function colorMarker(poiIndex) {
+	pointsOfInterest[poiIndex].gMarker.setIcon(hoveredIcon);
+}
+
 
 function hideMarker(poi) {
 	if (poi.index == infoWIndowIndex) {
@@ -348,7 +358,7 @@ var ViewModel = function() {
 		else {
 			return ko.utils.arrayFilter(this.mediatorList(), function(Poi) {
 				for (i=0, len=Poi.categories.length;i<len;i++) { //
-					if ((Poi.title.toLowerCase().indexOf(searchText) >= 0)||(Poi.categories[i].indexOf(searchText) >= 0)) {
+					if ((Poi.title.toLowerCase().indexOf(searchText) >= 0)) { //||(Poi.categories[i].indexOf(searchText) >= 0)
 						showMarker(Poi);
 						return Poi;
 					}

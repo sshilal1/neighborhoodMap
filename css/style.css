@@ -28,6 +28,7 @@ li:hover {
 	padding: 0;
 	margin: 10px;
 	height: 20px;
+	width: 65%;
 	-webkit-box-shadow: 2px 2px 5px #004d00;
 	font-size:20px;
 }

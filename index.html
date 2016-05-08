@@ -8,9 +8,15 @@
   </head>
 
   <body>
-  <button title="Expand/Collapse" data-name="show" id="toggle">&#8678</button>
+  <button title="Expand/Collapse" data-name="show" id="toggle">&#8678;</button>
     <div id="searchMenu">
-      <input id="searchBar" placeholder="Search..." data-bind="textInput: searchFor"></input>
+      <div>
+        <input id="searchBar" placeholder="Search..." data-bind="textInput: searchFor"/>
+        <div style="float:right;padding-right: 20px;padding-top: 5px;">
+          <div style="font-size:10px;">Powered By</div>
+          <img src="yelp-logo-xsmall@3x.png" style="width:40px;"><img>
+        </div> 
+      </div>
     	<ul id="searchResults" data-bind="foreach: masterList">
     		<li class="searchElem" data-bind=" event: { mouseover: $parent.mouseHovered, mouseout: $parent.mouseGone }, click: $parent.setPoi">
 			  <div style="font-size:18px; font-weight:bold;" data-bind="text: title"></div>
